@@ -1,0 +1,38 @@
+{
+  "name": "toml-json",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TOML To JSON",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "tscn ./example/index.ts",
+    "build": "tsc"
+  },
+  "files": [
+    "dist/"
+  ],
+  "repository": "git@github.com:marioa5945/toml-json",
+  "keywords": [
+    "toml",
+    "json"
+  ],
+  "author": {
+    "name": "mario a",
+    "email": "marioa5945@gmail.com",
+    "url": "https://marioa5945.github.io"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marioa5945/toml-json/issues"
+  },
+  "homepage": "https://github.com/marioa5945/blog",
+  "peerDependencies": {
+    "typescript": ">=2.7"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.22",
+    "rimraf": "^3.0.2",
+    "tscn": "^1.1.3",
+    "typescript": "^4.1.3"
+  }
+}
