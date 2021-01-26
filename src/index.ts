@@ -10,10 +10,7 @@ interface ifsJson {
  * @param fileUrl TOML file url
  */
 const tomlJson = (fileUrl: string): ifsJson => {
-  const arr = fs
-    .readFileSync(resolve(__dirname, fileUrl))
-    .toString()
-    .split('\n');
+  const arr = fs.readFileSync(resolve('.', fileUrl)).toString().split('\n');
 
   const obj: ifsJson = {};
   let key = '';

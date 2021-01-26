@@ -2,7 +2,7 @@
   "name": "toml-json",
   "version": "1.0.1",
   "description": "TOML To JSON",
-  "main": "./src/index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tscn ./example/index.ts",
     "build": "tsc"
@@ -24,10 +24,7 @@
   "bugs": {
     "url": "https://github.com/marioa5945/toml-json/issues"
   },
-  "homepage": "https://github.com/marioa5945/blog",
-  "peerDependencies": {
-    "typescript": ">=2.7"
-  },
+  "homepage": "https://github.com/marioa5945/toml-json",
   "devDependencies": {
     "@types/node": "^14.14.22",
     "rimraf": "^3.0.2",
