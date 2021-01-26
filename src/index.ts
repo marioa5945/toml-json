@@ -18,32 +18,62 @@ const tomlJson = (fileUrl: string): ifsJson => {
   const obj: ifsJson = {};
   let key = '';
 
+  /**
+   * The key is array of Line breaks
+   */
+  let keyArrayB = '';
+
+  /**
+   * The value is array of Line breaks
+   */
+  let valueArrayB = '';
+
   for (let str of arr) {
     if (str.indexOf('#') !== -1) {
       str = str.slice(0, str.indexOf('#') - 1);
     }
-    const noSpace = str.replace(/(^ +)|( +$)/g, '');
+    let noSpace = str.replace(/(^ +)|( +$)/g, '');
 
     if (noSpace !== '') {
-      const value = /^\[(.+)\]$/.exec(noSpace);
+      if (valueArrayB !== '') {
+        valueArrayB += str.replace(/(^ +)|( +$)/g, '');
+      }
 
-      // if it's obj
-      if (value) {
-        if (value[1].indexOf('.') === -1) {
-          key = value[1];
-          obj[key] = {};
-        } else {
-          objAdd(obj, value[1]);
+      if (valueArrayB === '' || (valueArrayB !== '' && str === ']')) {
+        // Synthesize array string
+        if (valueArrayB !== '') {
+          noSpace = `${keyArrayB} = ${valueArrayB}`;
         }
-      } else {
-        const sttr = /^(.+) = (.+)/.exec(noSpace);
 
-        if (sttr) {
-          const sttrValue = attrValueGet(sttr[2]);
-          if (key === '') {
-            obj[sttr[1]] = sttrValue;
+        const value = /^\[(.+)\]$/.exec(noSpace);
+
+        // if it's obj
+        if (value && valueArrayB === '') {
+          if (value[1].indexOf('.') === -1) {
+            key = value[1];
+            obj[key] = {};
           } else {
-            setAttrValue(obj, sttr[1], sttrValue);
+            objAdd(obj, value[1]);
+          }
+        } else {
+          valueArrayB = '';
+          keyArrayB = '';
+
+          const sttr = /^(.+) = (.+)/.exec(noSpace);
+
+          if (sttr) {
+            // It's array of Line breaks
+            if (sttr[2] === '[') {
+              keyArrayB = sttr[1];
+              valueArrayB = '[';
+            } else {
+              const sttrValue = attrValueGet(sttr[2]);
+              if (key === '') {
+                obj[sttr[1]] = sttrValue;
+              } else {
+                setAttrValue(obj, sttr[1], sttrValue);
+              }
+            }
           }
         }
       }
@@ -81,14 +111,68 @@ const setAttrValue = (obj: ifsJson, sttrKey: string, sttrValue: any) => {
 const attrValueGet = (str: string): any => {
   str = str.replace(/\"/g, '');
 
-  // boolen type
+  // boolen
   if (str === 'true') {
     return true;
   } else if (str === 'false') {
     return false;
   }
 
+  // number
+  const numStr = /([\d\.]+)/.exec(str);
+  if (
+    numStr &&
+    numStr[1] === str &&
+    str.indexOf('.') === str.lastIndexOf('.')
+  ) {
+    return Number(str);
+  }
+
+  // Convert array string to array object
+  const arr = /^\[(.+)\]$/.exec(str);
+
+  if (arr) {
+    return strToArr(arr[1]);
+  }
+
   return str;
+};
+
+/**
+ * Convert string to array
+ * @param str
+ */
+const strToArr = (str: string): Array<any> => {
+  let list: Array<any> = [];
+  if (str.indexOf('[') === -1) {
+    list = str.split(',');
+  } else {
+    const cArr = str.split('');
+    let startNum = 0;
+    let value = '';
+    for (const c of cArr) {
+      if (c === '[') {
+        startNum++;
+      } else if (c === ']') {
+        startNum--;
+      }
+
+      if (startNum === 0 && c === ',') {
+        list.push(value.replace(/(^ +)|( +$)/g, ''));
+        value = '';
+      } else {
+        value += c;
+      }
+    }
+    list.push(value.replace(/(^ +)|( +$)/g, ''));
+  }
+
+  const arr: Array<any> = [];
+  for (const n of list) {
+    arr.push(attrValueGet(n));
+  }
+
+  return arr;
 };
 
 /**

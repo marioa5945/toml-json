@@ -1,7 +1,6 @@
 {
   "name": "toml-json",
-  "version": "1.0.0",
-  "private": true,
+  "version": "1.0.1",
   "description": "TOML To JSON",
   "main": "./src/index.ts",
   "scripts": {
