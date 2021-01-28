@@ -7,10 +7,17 @@ interface ifsJson {
 
 /**
  * TOML to JSON
- * @param fileUrl TOML file url
+ * @param source
  */
-const tomlJson = (fileUrl: string): ifsJson => {
-  const arr = fs.readFileSync(resolve('.', fileUrl)).toString().split('\n');
+const tomlJson = (source: { fileUrl?: string; data?: string }): ifsJson => {
+  let arr: Array<string> = [];
+  if (source.fileUrl) {
+    arr = fs.readFileSync(resolve('.', source.fileUrl)).toString().split('\n');
+  } else if (source.data) {
+    arr = source.data.split('\n');
+  } else {
+    return {};
+  }
 
   const obj: ifsJson = {};
   let key = '';

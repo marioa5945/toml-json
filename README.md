@@ -17,9 +17,12 @@ npm install -D toml-json
 ## Usage
 
 ```ts
-import tomlJson from 'toml-json';
+import tomlJson from '../src';
 
-const config = tomlJson('configFileUrl');
+let config = tomlJson({ fileUrl: './example/config.toml' });
+console.log(config);
+
+config = tomlJson({ data: 'title = "TOML Example 2"' });
 console.log(config);
 ```
 
