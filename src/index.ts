@@ -9,14 +9,14 @@ interface ifsJson {
  * TOML to JSON
  * @param source
  */
-const tomlJson = (source: { fileUrl?: string; data?: string }): ifsJson => {
+const tomlJson = <T extends ifsJson>(source: { fileUrl?: string; data?: string }): T | undefined => {
   let arr: Array<string> = [];
   if (source.fileUrl) {
     arr = fs.readFileSync(resolve('.', source.fileUrl)).toString().split('\n');
   } else if (source.data) {
     arr = source.data.split('\n');
   } else {
-    return {};
+    return;
   }
 
   const obj: ifsJson = {};
@@ -83,7 +83,7 @@ const tomlJson = (source: { fileUrl?: string; data?: string }): ifsJson => {
       }
     }
   }
-  return obj;
+  return obj as T;
 };
 
 /**
