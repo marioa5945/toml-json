@@ -9,7 +9,7 @@ interface ifsJson {
  * TOML to JSON
  * @param source
  */
-const tomlJson = <T extends ifsJson>(source: { fileUrl?: string; data?: string }): T | undefined => {
+const tomlJson = <T extends object>(source: { fileUrl?: string; data?: string }): T | undefined => {
   let arr: Array<string> = [];
   if (source.fileUrl) {
     arr = fs.readFileSync(resolve('.', source.fileUrl)).toString().split('\n');
