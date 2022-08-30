@@ -25,7 +25,14 @@ enabled = true
 
 [clients]
 data = [ ["gamma", "delta"], [1, 2] ]
-list = []
+
+[[products]]
+name = "name1"
+age = 22
+
+[[products]]
+name = "name2"
+age = 23
 
 # Line breaks are OK when inside arrays
 hosts = [
