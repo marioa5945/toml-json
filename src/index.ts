@@ -33,6 +33,9 @@ const tomlJson = <T extends object>(source: { fileUrl?: string; data?: string })
   let valueArrayB = '';
 
   for (let str of arr) {
+    if(str.indexOf('#') === 0){
+      continue;
+    }
     if (str.indexOf('#') !== -1) {
       str = str.slice(0, str.indexOf('#') - 1);
     }
@@ -50,9 +53,11 @@ const tomlJson = <T extends object>(source: { fileUrl?: string; data?: string })
         }
 
         const value = /^\[(.+)\]$/.exec(noSpace);
+   
 
         // if it's obj
         if (value && valueArrayB === '') {
+         
           if (value[1].indexOf('.') === -1) {
             key = value[1];
             obj[key] = {};
@@ -64,7 +69,6 @@ const tomlJson = <T extends object>(source: { fileUrl?: string; data?: string })
           keyArrayB = '';
 
           const sttr = /^(.+) = (.+)/.exec(noSpace);
-
           if (sttr) {
             // It's array of Line breaks
             if (sttr[2] === '[') {
@@ -133,8 +137,11 @@ const attrValueGet = (str: string): any => {
   }
 
   // Convert array string to array object
-  const arr = /^\[(.+)\]$/.exec(str);
+  if( str === '[]') {
+    return []
+  }
 
+  const arr = /^\[(.+)\]$/.exec(str);
   if (arr) {
     return strToArr(arr[1]);
   }
@@ -149,7 +156,10 @@ const attrValueGet = (str: string): any => {
 const strToArr = (str: string): Array<any> => {
   let list: Array<any> = [];
   if (str.indexOf('[') === -1) {
-    list = str.split(',');
+    const valueArr = str.split(',');
+    for(const value of valueArr) {
+      list.push(value.replace(/(^ +)|( +$)/g, ''));
+    }
   } else {
     const cArr = str.split('');
     let startNum = 0;
@@ -168,6 +178,7 @@ const strToArr = (str: string): Array<any> => {
         value += c;
       }
     }
+ 
     list.push(value.replace(/(^ +)|( +$)/g, ''));
   }
 

@@ -25,6 +25,7 @@ enabled = true
 
 [clients]
 data = [ ["gamma", "delta"], [1, 2] ]
+list = []
 
 # Line breaks are OK when inside arrays
 hosts = [
